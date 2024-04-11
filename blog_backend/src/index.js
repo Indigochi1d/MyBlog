@@ -1,26 +1,14 @@
 const Koa = require("koa");
+const Router = require("koa-router");
 
 const app = new Koa();
+const router = new Router();
 
-app.use((ctx, next) => {
-  console.log(ctx.url);
-  console.log(1);
-  console.log(ctx.query.authorized)
-  if (ctx.query.authorized !== "1") {
-    ctx.status = 401;
-    return;
-  }
-  next();
-});
+const api = require('./api');
 
-app.use((ctx, next) => {
-  console.log(2);
-  next();
-});
+router.use('/api', api.routes());
 
-app.use((ctx) => {
-  ctx.body = "hello world";
-});
+app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(8080, () => {
   console.log("Listening to port 8080");
