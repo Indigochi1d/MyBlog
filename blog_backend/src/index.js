@@ -1,15 +1,31 @@
+require("dotenv").config();
 const Koa = require("koa");
 const Router = require("koa-router");
+const bodyParser = require("koa-bodyparser");
+const mongoose = require("mongoose");
+const api = require("./api");
+// 비구조화 할당을 통해 process.env 내부 값에 대한 레퍼런스 만들기
+const { PORT, MONGO_URI } = process.env;
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((e) => {
+    console.log(e);
+  });
 
 const app = new Koa();
 const router = new Router();
 
-const api = require('./api');
+router.use("/api/", api.routes());
 
-router.use('/api', api.routes());
+app.use(bodyParser()); //라우터 적용 전에 bodyParser적용
 
 app.use(router.routes()).use(router.allowedMethods());
 
-app.listen(8080, () => {
-  console.log("Listening to port 8080");
+const port = PORT || 8080;
+app.listen(port, () => {
+  console.log("Listening to port %d", port);
 });
