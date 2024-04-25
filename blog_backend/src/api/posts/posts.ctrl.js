@@ -1,6 +1,6 @@
-const Post = require("../../models/post.js");
+import Post from "../../models/post.js";
 
-exports.write = async (ctx) => {
+export const write = async (ctx) => {
   const { title, body, tags } = ctx.request.body;
   const post = new Post({
     title,
@@ -11,14 +11,14 @@ exports.write = async (ctx) => {
     await post.save();
     ctx.body = post;
   } catch (error) {
-    ctx.throw(500, e);
+    ctx.throw(500, error);
   }
 };
 
-exports.list = (ctx) => {};
+export const list = (ctx) => {};
 
-exports.read = (ctx) => {};
+export const read = (ctx) => {};
 
-exports.remove = (ctx) => {};
+export const remove = (ctx) => {};
 
-exports.update = (ctx) => {};
+export const update = (ctx) => {};
