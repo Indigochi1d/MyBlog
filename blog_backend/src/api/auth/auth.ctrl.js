@@ -78,6 +78,9 @@ export const login = async (ctx) => {
   }
 };
 
+/* 
+  GET /api/auth/check 
+*/
 export const check = async (ctx) => {
   const {user} = ctx.state;
   if(!user){
@@ -87,7 +90,10 @@ export const check = async (ctx) => {
   }
   ctx.body = user;
 };
-
+/*
+  POST /api/auth/logout  
+*/
 export const logout = async (ctx) => {
-  //로그아웃
+  ctx.cookies.set('access_token');
+  ctx.status = 204; //No Content
 };
