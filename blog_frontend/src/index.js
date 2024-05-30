@@ -9,9 +9,10 @@ import PostPage from './pages/PostPage';
 import UserPage from './pages/UserPage';
 import './index.css';
 import { Provider } from 'react-redux';
-import { legacy_createStore as createStore } from 'redux';
+import { legacy_createStore as createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from '@redux-devtools/extension';
-import rootReducer from './modules/index.js';
+import rootReducer, { rootSaga } from './modules/index.js';
+import createSagaMiddleware from 'redux-saga';
 
 const router = createBrowserRouter([
   {
@@ -44,8 +45,12 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
-const store = createStore(rootReducer, composeWithDevTools());
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(sagaMiddleware)),
+);
+sagaMiddleware.run(rootSaga);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
