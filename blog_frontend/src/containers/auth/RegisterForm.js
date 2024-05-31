@@ -1,12 +1,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeField, initializeForm } from '../../modules/auth';
+import { changeField, initializeForm, register } from '../../modules/auth';
 import AuthForm from '../../components/auth/AuthForm';
+import { check } from '../../modules/user';
+import { useNavigate } from 'react-router-dom';
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { form } = useSelector(({ auth }) => ({
+  const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
     form: auth.register,
+    auth: auth.auth,
+    authError: auth.authError,
+    user: user.user,
   }));
+
   const onChange = (e) => {
     const { value, name } = e.target;
     dispatch(
@@ -14,16 +21,42 @@ const RegisterForm = () => {
         form: 'register',
         key: name,
         value,
-      })
+      }),
     );
   };
+
   const onSubmit = (e) => {
     e.preventDefault();
-    //로그인 및 회원가입시 추가 구현 필요
+    const { username, password, passwordConfirm } = form;
+    if (password !== passwordConfirm) {
+      // TODO: 오류 처리
+      return;
+    }
+    dispatch(register({ username, password }));
   };
+
   useEffect(() => {
     dispatch(initializeForm('register'));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (authError) {
+      console.log('오류 발생!');
+      console.log(authError);
+      return;
+    }
+    if (auth) {
+      console.log('회원가입 성공');
+      console.log(auth);
+      dispatch(check());
+    }
+  }, [auth, authError, dispatch]);
+  useEffect(() => {
+    if (user) {
+      console.log('check API 성공 :', user);
+      navigate('/');
+    }
+  }, [navigate, user]);
   return (
     <AuthForm
       type="register"
