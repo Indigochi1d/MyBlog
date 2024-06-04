@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeField, initializeForm, register } from '../../modules/auth';
 import AuthForm from '../../components/auth/AuthForm';
 import { check } from '../../modules/user';
 import { useNavigate } from 'react-router-dom';
 const RegisterForm = () => {
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
@@ -28,8 +29,19 @@ const RegisterForm = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     const { username, password, passwordConfirm } = form;
+    if(typeof username === 'string'){
+      console.log("string");
+    }
+    if ([username, password, passwordConfirm].includes('')) {
+      setErrorMessage('빈 칸을 모두 입력하세요.');
+      return;
+    }
     if (password !== passwordConfirm) {
-      // TODO: 오류 처리
+      setErrorMessage('비밀번호가 맞지 않습니다.');
+      dispatch(changeField({ form: 'register', key: 'password', value: '' }));
+      dispatch(
+        changeField({ form: 'register', key: 'passwordConfirm', value: '' }),
+      );
       return;
     }
     dispatch(register({ username, password }));
@@ -41,12 +53,15 @@ const RegisterForm = () => {
 
   useEffect(() => {
     if (authError) {
-      console.log('오류 발생!');
-      console.log(authError);
-      return;
+      if(authError.response.status === 409){
+        setErrorMessage("이미 존재하는 계정명입니다.");
+        return;
+      }
+      setErrorMessage("회원가입 실패!");
+      return ;
     }
     if (auth) {
-      console.log('회원가입 성공');
+      console.log('회원가입 성공!');
       console.log(auth);
       dispatch(check());
     }
@@ -63,6 +78,7 @@ const RegisterForm = () => {
       form={form}
       onChange={onChange}
       onSubmit={onSubmit}
+      error={errorMessage}
     />
   );
 };
