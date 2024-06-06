@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import palette from '../../lib/styles/palette';
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 const buttonStyle = css`
   border: none;

@@ -70,6 +70,11 @@ const RegisterForm = () => {
     if (user) {
       console.log('check API 성공 :', user);
       navigate('/');
+      try {
+        localStorage.setItem('user',JSON.stringify(user));
+      } catch (error) {
+        console.error(error);
+      }
     }
   }, [navigate, user]);
   return (
