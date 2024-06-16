@@ -8,7 +8,6 @@ export const createRequestActionTypes = (type) => {
     return [type,SUCCESS,FAILURE];
 }
 
-
 export default function createRequestSaga(type,request){
     const SUCCESS = `${type}_SUCCESS`;
     const FAILURE = `${type}_FAILURE`;
