@@ -8,7 +8,7 @@ posts.get("/", postsCtrl.list);
 posts.post("/", checkLoggedIn, postsCtrl.write);
 
 const post = new Router(); // /api/posts/:id
-post.get("/:id", postsCtrl.read);
+post.get("/", postsCtrl.read);
 post.delete("/:id", checkLoggedIn,postsCtrl.checkOwnPost, postsCtrl.remove);
 post.patch("/:id", checkLoggedIn,postsCtrl.checkOwnPost, postsCtrl.update);
 
