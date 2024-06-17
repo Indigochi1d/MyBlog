@@ -1,8 +1,11 @@
 import Post from "../../models/post.js";
 import mongoose from "mongoose";
 import Joi from "joi";
+import sanitizeOption, { removeHtmlAndShorten } from "./SanitizeOption.js";
+import sanitizeHTML from "sanitize-html";
 
 const { ObjectId } = mongoose.Types;
+
 export const getPostById = async (ctx, next) => {
   const { id } = ctx.params;
   if (!ObjectId.isValid(id)) {
@@ -54,7 +57,7 @@ export const write = async (ctx) => {
   const { title, body, tags } = ctx.request.body;
   const post = new Post({
     title,
-    body,
+    body: sanitizeHTML(body, sanitizeOption),
     tags,
     user: ctx.state.user,
   });
@@ -65,6 +68,7 @@ export const write = async (ctx) => {
     ctx.throw(500, error);
   }
 };
+
 /*
   GET /api/posts?username=&tag=&page= 
 */
@@ -93,11 +97,10 @@ export const list = async (ctx) => {
       .map((post) => post.toJSON())
       .map((post) => ({
         ...post,
-        body:
-          post.body.length < 200 ? post.body : `${post.body.slice(0, 200)}...`,
+        body: removeHtmlAndShorten(post.body),
       }));
   } catch (error) {
-    ctx.throw(500, e);
+    ctx.throw(500, error);
   }
 };
 
@@ -140,8 +143,13 @@ export const update = async (ctx) => {
     ctx.body = result.error;
     return;
   }
+  const nextData = { ...ctx.request.body };
+  if (nextData.body) {
+    nextData.body = sanitizeHTML(nextData.body, sanitizeOption);
+  }
+
   try {
-    const post = await Post.findByIdAndUpdate(id, ctx.request.body, {
+    const post = await Post.findByIdAndUpdate(id, nextData, {
       new: true, // 이 값이 true면 업데이트된 데이터를 반환함
       // false면 업데이트 되기 전 데이터를 반환
     }).exec();
