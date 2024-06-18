@@ -23,7 +23,7 @@ const PostContent = styled.div`
   color: ${palette.gray[8]};
 `;
 
-const PostViewer = ({ post, error, loading }) => {
+const PostViewer = ({ post, error, loading, actionButtons }) => {
   if (error) {
     if (error.response && error.response.status === 404) {
       return <StyledPostViewer>존재하지 않는 포스트입니다.</StyledPostViewer>;
@@ -38,9 +38,14 @@ const PostViewer = ({ post, error, loading }) => {
     <StyledPostViewer>
       <PostHead>
         <h1>{title}</h1>
-        <SubInfo username={user.username} publishedDate={publishedDate} hasMarginTop/>
-        <Tags tags={tags}/>
+        <SubInfo
+          username={user.username}
+          publishedDate={publishedDate}
+          hasMarginTop
+        />
+        <Tags tags={tags} />
       </PostHead>
+      {actionButtons}
       <PostContent dangerouslySetInnerHTML={{ __html: body }} />
     </StyledPostViewer>
   );
