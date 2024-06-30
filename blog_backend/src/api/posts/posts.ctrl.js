@@ -130,35 +130,36 @@ export const remove = async (ctx) => {
     tags : ["수정","태그"]
   }
  */
-export const update = async (ctx) => {
-  const { id } = ctx.params;
-  const schema = Joi.object().keys({
-    title: Joi.string(),
-    body: Joi.string(),
-    tags: Joi.array().items(Joi.string()),
-  });
-  const result = schema.validate(ctx.request.body);
-  if (result.error) {
-    ctx.status = 400;
-    ctx.body = result.error;
-    return;
-  }
-  const nextData = { ...ctx.request.body };
-  if (nextData.body) {
-    nextData.body = sanitizeHTML(nextData.body, sanitizeOption);
-  }
-
-  try {
-    const post = await Post.findByIdAndUpdate(id, nextData, {
-      new: true, // 이 값이 true면 업데이트된 데이터를 반환함
-      // false면 업데이트 되기 전 데이터를 반환
-    }).exec();
-    if (!post) {
-      ctx.status = 404;
+  export const update = async (ctx) => {
+    const { id } = ctx.params;
+    const schema = Joi.object().keys({
+      title: Joi.string(),
+      body: Joi.string(),
+      tags: Joi.array().items(Joi.string()),
+    });
+  
+    const result = schema.validate(ctx.request.body);
+    if (result.error) {
+      ctx.status = 400;
+      ctx.body = result.error;
       return;
     }
-    ctx.body = post;
-  } catch (error) {
-    ctx.throw(500, error);
-  }
-};
+  
+    const nextData = { ...ctx.request.body };
+    if (nextData.body) {
+      nextData.body = sanitizeHTML(nextData.body, sanitizeOption);
+    }
+  
+    try {
+      const post = await Post.findByIdAndUpdate(id, nextData, {
+        new: true,
+      }).exec();
+      if (!post) {
+        ctx.status = 404;
+        return;
+      }
+      ctx.body = post;
+    } catch (error) {
+      ctx.throw(500, error);
+    }
+  };
