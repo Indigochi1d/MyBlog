@@ -17,7 +17,6 @@ const WriteActionButtonsContainer = () => {
       originalPostId: write.originalPostId,
     }),
   );
-
   const onPublish = () => {
     if (originalPostId) {
       dispatch(updatePost({ title, body, tags, id: originalPostId }));
@@ -48,7 +47,7 @@ const WriteActionButtonsContainer = () => {
     <WriteActionButton
       onPublish={onPublish}
       onCancel={onCancel}
-      isEdit={!originalPostId}
+      isEdit={!!originalPostId}
     />
   );
 };

@@ -31,7 +31,7 @@ export const writePost = createAction(WRITE_POST, ({ title, body, tags }) => ({
   body,
   tags,
 }));
-export const setOriginalPost = createAction(SET_ORIGINAL_POST, (post) => post);
+export const setOriginalPost = createAction(SET_ORIGINAL_POST, post => post);
 
 const writePostSaga = createRequestSaga(WRITE_POST, postsAPI.writePost);
 const updatePostSaga = createRequestSaga(UPDATE_POST, postsAPI.updatePost);
@@ -47,7 +47,7 @@ const initialState = {
   tags: [],
   post: null,
   postError: null,
-  originalPost: null,
+  originalPostId: null,
 };
 
 const write = handleActions(
@@ -75,7 +75,7 @@ const write = handleActions(
       title: post.title,
       body: post.body,
       tags: post.tags,
-      originalPost: post._id,
+      originalPostId: post._id,
     }),
     [UPDATE_POST_SUCCESS]: (state, { payload: post }) => ({
       ...state,
