@@ -5,6 +5,7 @@ import PostViewer from '../../components/post/PostViewer';
 import { useEffect } from 'react';
 import PostActionButtons from '../../components/post/PostActionButtons';
 import { setOriginalPost } from '../../modules/write';
+import { removePost } from '../../lib/api/posts';
 
 const PostViewerContainer = () => {
   const { postId } = useParams();
@@ -30,13 +31,22 @@ const PostViewerContainer = () => {
     dispatch(setOriginalPost(post));
     navigate('/write');
   };
+
+  const onRemove = async () => {
+    try {
+      await removePost(postId);
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const ownPost = (user && user._id) === (post && post.user._id);
   return (
     <PostViewer
       post={post}
       loading={loading}
       error={error}
-      actionButtons={ownPost && <PostActionButtons onEdit={onEdit} />}
+      actionButtons={ownPost && <PostActionButtons onEdit={onEdit} onRemove={onRemove}/>}
     />
   );
 };

@@ -19,3 +19,7 @@ export const updatePost = ({ id, title, body, tags }) => {
     tags,
   });
 };
+
+export const removePost = (id) => {
+  return client.delete(`/api/posts/${id}`);
+}

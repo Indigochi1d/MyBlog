@@ -18,7 +18,6 @@ const buildLink = ({ username, tag, page }) => {
 };
 
 const Pagination = ({ page, lastPage, username, tag, postExist }) => {
-  console.log(postExist);
   return (
     postExist && (
       <StyledPagination>
