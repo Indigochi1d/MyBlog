@@ -1,5 +1,4 @@
 <h1>SIDE Project : MY BLOG</h1>
-<hr/>
 <h2>Used Skills</h2>
 <div style={display:'flex',flex-direction:'row}>
    <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white"/>
