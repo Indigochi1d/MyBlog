@@ -9,6 +9,7 @@
    <img src="https://img.shields.io/badge/Redux-764ABC?style=flat&logo=redux&logoColor=white"/>
 </div>
 <h2>Application Directory Structure</h2>
+
 ```
 blog
 ├─ .DS_Store
